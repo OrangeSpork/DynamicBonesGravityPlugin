@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DynamicBonesGravityPlugin", "DynamicBonesGravityPlugin\DynamicBonesGravityPlugin.shproj", "{98F6516D-2E55-4FF3-817B-E51C4C376881}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HS2_DynamicBonesGravityPlugin", "HS2_DynamicBonesGravityPlugin\HS2_DynamicBonesGravityPlugin.csproj", "{B69BDCF1-F04C-40CA-9A6C-9574AFF59869}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AI_DynamicBonesGravityPlugin", "AI_DynamicBonesGravityPlugin\AI_DynamicBonesGravityPlugin.csproj", "{A31DE13C-5CDE-4E4A-8527-6ECDDDB16089}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		DynamicBonesGravityPlugin\DynamicBonesGravityPlugin.projitems*{98f6516d-2e55-4ff3-817b-e51c4c376881}*SharedItemsImports = 13
+		DynamicBonesGravityPlugin\DynamicBonesGravityPlugin.projitems*{a31de13c-5cde-4e4a-8527-6ecdddb16089}*SharedItemsImports = 4
+		DynamicBonesGravityPlugin\DynamicBonesGravityPlugin.projitems*{b69bdcf1-f04c-40ca-9a6c-9574aff59869}*SharedItemsImports = 4
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B69BDCF1-F04C-40CA-9A6C-9574AFF59869}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B69BDCF1-F04C-40CA-9A6C-9574AFF59869}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B69BDCF1-F04C-40CA-9A6C-9574AFF59869}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B69BDCF1-F04C-40CA-9A6C-9574AFF59869}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A31DE13C-5CDE-4E4A-8527-6ECDDDB16089}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A31DE13C-5CDE-4E4A-8527-6ECDDDB16089}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A31DE13C-5CDE-4E4A-8527-6ECDDDB16089}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A31DE13C-5CDE-4E4A-8527-6ECDDDB16089}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DC52961F-4284-4D47-BF2A-C6DD60BBA90C}
+	EndGlobalSection
+EndGlobal
