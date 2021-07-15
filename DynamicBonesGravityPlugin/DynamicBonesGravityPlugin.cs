@@ -42,7 +42,7 @@ namespace DynamicBonesGravityPlugin
             StrongerEnabled = Config.Bind("Config", "Stronger!", false, new ConfigDescription("Stronger (4 Times Default)", null, new ConfigurationManagerAttributes { Order = 4 }));
             RealismEnabled = Config.Bind("Config", "Realistic!!!", false, new ConfigDescription("Realish (Compensates for 10x size with 10 Times Default)", null, new ConfigurationManagerAttributes { Order = 3 }));
             AdvancedModeEnabled = Config.Bind("Config", "Advanced Mode", false, new ConfigDescription("Use the values below instead of defaults, control your own destiny!", null, new ConfigurationManagerAttributes { Order = 2 }));
-            AdvancedGravityAdjustment = Config.Bind("Config", "Advanced Gravity", -0.015f, new ConfigDescription("Y Gravity Adjustment", new AcceptableValueRange<float>(-.1f, -0.001f), new ConfigurationManagerAttributes { Order = 1 }));
+            AdvancedGravityAdjustment = Config.Bind("Config", "Advanced Gravity", -0.015f, new ConfigDescription("Y Gravity Adjustment", new AcceptableValueRange<float>(-1f, -0.001f), new ConfigurationManagerAttributes { Order = 1 }));
             AlternateUpdateMode = Config.Bind("Config", "Alternate Update Mode", false, new ConfigDescription("Calc in FixedUpdate Instead of LateUpdate", null, new ConfigurationManagerAttributes {  Order = -1 }));
 
             Config.SettingChanged += ConfigUpdated;
