@@ -5,6 +5,7 @@ using HarmonyLib;
 using Manager;
 using System;
 using System.Diagnostics.Eventing.Reader;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -16,7 +17,7 @@ namespace DynamicBonesGravityPlugin
     {
         public const string GUID = "orange.spork.dynamicbonesgravityplugin";
         public const string PluginName = "DynamicBonesGravityPlugin";
-        public const string Version = "1.0.0";
+        public const string Version = "1.0.2";
 
         public static ConfigEntry<bool> PluginEnabled { get; set; }
         public static ConfigEntry<bool> StrongerEnabled { get; set; }
@@ -43,7 +44,7 @@ namespace DynamicBonesGravityPlugin
             RealismEnabled = Config.Bind("Config", "Realistic!!!", false, new ConfigDescription("Realish (Compensates for 10x size with 10 Times Default)", null, new ConfigurationManagerAttributes { Order = 3 }));
             AdvancedModeEnabled = Config.Bind("Config", "Advanced Mode", false, new ConfigDescription("Use the values below instead of defaults, control your own destiny!", null, new ConfigurationManagerAttributes { Order = 2 }));
             AdvancedGravityAdjustment = Config.Bind("Config", "Advanced Gravity", -0.015f, new ConfigDescription("Y Gravity Adjustment", new AcceptableValueRange<float>(-1f, -0.001f), new ConfigurationManagerAttributes { Order = 1 }));
-            AlternateUpdateMode = Config.Bind("Config", "Alternate Update Mode", false, new ConfigDescription("Calc in FixedUpdate Instead of LateUpdate", null, new ConfigurationManagerAttributes {  Order = -1 }));
+            AlternateUpdateMode = Config.Bind("Config", "Alternate Update Mode", false, new ConfigDescription("Calc in FixedUpdate Instead of LateUpdate", null, new ConfigurationManagerAttributes { Order = -1 }));
 
             Config.SettingChanged += ConfigUpdated;
 
@@ -54,28 +55,43 @@ namespace DynamicBonesGravityPlugin
             harmony.Patch(dynamicBoneFixedUpdateMethod, new HarmonyMethod(typeof(DynamicBonesGravityPlugin), "DynamicBoneFixedUpdateOverride"), null, null, null);
             MethodInfo dyanmicBoneLateUpdateMethod = AccessTools.Method(typeof(DynamicBone), "LateUpdate");
             harmony.Patch(dyanmicBoneLateUpdateMethod, new HarmonyMethod(typeof(DynamicBonesGravityPlugin), "DynamicBoneLateUpdateOverride"), null, null, null);
-        }        
+        }
 
-       
+
 
         void Update()
         {
-        //    Log.LogInfo(string.Format("Initiative: {0} Mode: {1} ModeCtrl: {2} AInfo: {3}", HSceneFlagCtrl.Instance?.initiative, HSceneManager.Instance?.Hscene?.StartAnimInfo?.ActionCtrl.Item1, HSceneManager.Instance?.Hscene?.StartAnimInfo?.ActionCtrl.Item2, HSceneManager.Instance?.Hscene?.StartAnimInfo));
+            //    Log.LogInfo(string.Format("Initiative: {0} Mode: {1} ModeCtrl: {2} AInfo: {3}", HSceneFlagCtrl.Instance?.initiative, HSceneManager.Instance?.Hscene?.StartAnimInfo?.ActionCtrl.Item1, HSceneManager.Instance?.Hscene?.StartAnimInfo?.ActionCtrl.Item2, HSceneManager.Instance?.Hscene?.StartAnimInfo));
         }
 
         static void OverrideDynamicBonesGravity(DynamicBone __instance)
         {
             DynamicBonesGravityPlugin.Instance.UpdateBone(__instance, false, false);
-        }     
+        }
 
         public void ConfigUpdated(object sender, SettingChangedEventArgs settingChanged)
         {
             UpdateBones(true);
         }
 
+        private float GetGravityForAdjustment()
+        {
+            if (AdvancedModeEnabled.Value)
+                return AdvancedGravityAdjustment.Value;
+            else if (RealismEnabled.Value)
+                return -0.010f;
+            else if (StrongerEnabled.Value)
+                return -0.004f;
+            else
+                return -0.002f;
+        }
+
         public void UpdateBone(DynamicBone dynamicBone, bool configChange, bool updateParameters = true)
         {
-            if (dynamicBone.m_Gravity.y != 0.0f && !configChange)
+            if (ExcludedBones.Contains(dynamicBone.gameObject.transform.name))
+                return;
+
+            if (dynamicBone.m_Gravity.y <= GetGravityForAdjustment()  && !configChange)
             {
                 return;
             }
@@ -85,24 +101,9 @@ namespace DynamicBonesGravityPlugin
             {
                 dynamicBone.m_Gravity = new Vector3(oldGravity.x, 0f, oldGravity.z);
             }
-            else if (PluginEnabled.Value && AdvancedModeEnabled.Value)
-            {
-                dynamicBone.m_Gravity = new Vector3(oldGravity.x, AdvancedGravityAdjustment.Value, oldGravity.z);
-            } 
             else if (PluginEnabled.Value)
             {
-                if (RealismEnabled.Value)
-                {
-                    dynamicBone.m_Gravity = new Vector3(oldGravity.x, -0.010f, oldGravity.z);
-                }
-                else if (StrongerEnabled.Value)
-                {
-                    dynamicBone.m_Gravity = new Vector3(oldGravity.x, -0.004f, oldGravity.z);
-                }
-                else
-                {
-                    dynamicBone.m_Gravity = new Vector3(oldGravity.x, -0.002f, oldGravity.z);
-                }
+                dynamicBone.m_Gravity = new Vector3(oldGravity.x, GetGravityForAdjustment(), oldGravity.z);
             }
 
             if (updateParameters)
@@ -162,6 +163,11 @@ namespace DynamicBonesGravityPlugin
                 return true;
             }
             return false;
-        }
+        }        
+
+        private static string[] ExcludedBones = new string[]
+        {
+            "cf_J_Vagina_root",
+        };
     }
 }
